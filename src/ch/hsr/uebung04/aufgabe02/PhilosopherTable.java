@@ -46,24 +46,9 @@ class Philosopher extends Thread {
     int left = table.leftForkNumber(id);
     int right = table.rightForkNumber(id);
     
-    // Dadurch dass mit tryAcquire() immer alle Resourcen frei gibt, 
-    // wenn man nicht alle nötigen Resourcen beziehen kann,
-    // gibt es kein Deadlock oder Livelock. Jedoch ist diese Implementation
-    // nicht besonders effizient.
-    
     table.acquireFork(Math.min(left, right));
     sleep(500);
     table.acquireFork(Math.max(left, right));
-		
-//		if (table.leftForkNumber(id) < table.rightForkNumber(id)) {
-//  		table.acquireFork(table.leftForkNumber(id));
-//  		sleep(500);
-//  		table.acquireFork(table.rightForkNumber(id));
-//		} else {
-//		  table.acquireFork(table.rightForkNumber(id));
-//      sleep(500);
-//      table.acquireFork(table.leftForkNumber(id));
-//		}
 	}
 
 	private void putForks() {

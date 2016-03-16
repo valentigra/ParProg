@@ -1,29 +1,43 @@
 package ch.hsr.uebung04.aufgabe03;
 
 public class UpgradeableReadWriteLock {
-	// TODO: Implement
+  private int readers = 0;
+  private int writer = 0;
+  private Thread updater = null;
 
-	public void readLock() throws InterruptedException {
-		// TODO:
+	public synchronized void readLock() throws InterruptedException {
+	  while (writer > 0) {
+	    wait();
+	  }
+	  readers++;
 	}
 
-	public void readUnlock() {
-		// TODO:
+	public synchronized void readUnlock() {
+	  readers--;
+	  notifyAll();
 	}
 
-	public void upgradeableReadLock() throws InterruptedException {
-		// TODO:
+	public synchronized void upgradeableReadLock() throws InterruptedException {
+	  while (updater != null || writer > 0) {
+	    wait();
+	  }
+	  updater = Thread.currentThread();
 	}
 
-	public void upgradeableReadUnlock() {
-		// TODO:
+	public synchronized void upgradeableReadUnlock() {
+	  updater = null;
+	  notifyAll();
 	}
 
-	public void writeLock() throws InterruptedException {
-		// TODO:
+	public synchronized void writeLock() throws InterruptedException {
+	  while (!(updater == Thread.currentThread() || updater == null ) || readers > 0 || writer > 0) {
+	    wait();
+	  }
+	  writer++;
 	}
 
-	public void writeUnlock() {
-		// TODO:
+	public synchronized void writeUnlock() {
+	  writer--;
+	  notifyAll();
 	}
 }
