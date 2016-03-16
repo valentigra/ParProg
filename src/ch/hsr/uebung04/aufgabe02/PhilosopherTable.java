@@ -1,4 +1,4 @@
-package ch.hsr.uebung04.aufgabe02_b;
+package ch.hsr.uebung04.aufgabe02;
 
 import java.util.Observable;
 import java.util.concurrent.Semaphore;
@@ -42,17 +42,28 @@ class Philosopher extends Thread {
 	private void takeForks() throws InterruptedException {
 		philoState = PhiloState.hungry;
 		table.notifyStateChange(this);
-
-		int leftForkNo = table.leftForkNumber(id);
-		int rightForkNo = table.rightForkNumber(id);
-
-		table.acquireFork(leftForkNo);
-		while (!table.tryAcquireFork(rightForkNo)) {
-			System.out.println("Philosophers " + getId() + " retries...");
-			table.releaseFork(leftForkNo);
-			sleep(500);
-			table.acquireFork(leftForkNo);
-		}
+		// try to get the forks
+    int left = table.leftForkNumber(id);
+    int right = table.rightForkNumber(id);
+    
+    // Dadurch dass mit tryAcquire() immer alle Resourcen frei gibt, 
+    // wenn man nicht alle nötigen Resourcen beziehen kann,
+    // gibt es kein Deadlock oder Livelock. Jedoch ist diese Implementation
+    // nicht besonders effizient.
+    
+    table.acquireFork(Math.min(left, right));
+    sleep(500);
+    table.acquireFork(Math.max(left, right));
+		
+//		if (table.leftForkNumber(id) < table.rightForkNumber(id)) {
+//  		table.acquireFork(table.leftForkNumber(id));
+//  		sleep(500);
+//  		table.acquireFork(table.rightForkNumber(id));
+//		} else {
+//		  table.acquireFork(table.rightForkNumber(id));
+//      sleep(500);
+//      table.acquireFork(table.leftForkNumber(id));
+//		}
 	}
 
 	private void putForks() {
@@ -91,10 +102,6 @@ class PhilosopherTable extends Observable {
 		for (int i = 0; i < nofPhilosophers; i++) {
 			philosophers[i] = new Philosopher(this, i);
 		}
-	}
-
-	public boolean tryAcquireFork(int forkNumber) {
-		return forks[forkNumber].tryAcquire();
 	}
 
 	public void acquireFork(int forkNumber) throws InterruptedException {

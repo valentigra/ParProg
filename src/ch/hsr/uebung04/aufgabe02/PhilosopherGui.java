@@ -1,4 +1,4 @@
-package ch.hsr.uebung04.aufgabe02_a;
+package ch.hsr.uebung04.aufgabe02;
 
 import java.awt.Color;
 import java.awt.Dimension;
