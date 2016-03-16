@@ -12,6 +12,10 @@ public class BrokenCyclicLatch {
 		for (int round = 0; round < NOF_ROUNDS; round++) {
 			latch.countDown();
 			latch.await();
+			// Dadurch, dass der Thread mit ID 0 nicht garantiert als erstes ausgeführt wird,
+			// kann er überholt werden. Sobald dieser den neuen Latch setzt, wartet der neue Latch auf
+			// NOF_THREADS. Dadurch das ein oder mehrere schon durchgelaufen sind, wird der neue Latch nie auf 0
+			// gesetzt.
 			if (threadId == 0) {
 				latch = new CountDownLatch(NOF_THREADS); // new latch for new round
 			}

@@ -43,9 +43,24 @@ class Philosopher extends Thread {
 		philoState = PhiloState.hungry;
 		table.notifyStateChange(this);
 		// try to get the forks
-		table.acquireFork(table.leftForkNumber(id));
-		sleep(500);
-		table.acquireFork(table.rightForkNumber(id));
+		
+    int left = table.leftForkNumber(id);
+    int right = table.rightForkNumber(id);
+    
+    table.acquireFork(Math.min(left, right));
+    sleep(500);
+    table.acquireFork(Math.max(left, right));
+		
+//		if (table.leftForkNumber(id) < table.rightForkNumber(id)) {
+//  		table.acquireFork(table.leftForkNumber(id));
+//  		sleep(500);
+//  		table.acquireFork(table.rightForkNumber(id));
+//		} else {
+//		  table.acquireFork(table.rightForkNumber(id));
+//      sleep(500);
+//      table.acquireFork(table.leftForkNumber(id));
+//      
+//		}
 	}
 
 	private void putForks() {
