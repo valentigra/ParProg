@@ -1,0 +1,29 @@
+# Aufgabe 1 
+
+Dadurch, dass der Thread mit ID 0 nicht garantiert als erstes ausgeführt wird,
+kann er überholt werden. Sobald dieser den neuen Latch setzt, wartet der neue Latch auf
+NOF_THREADS. Dadurch das ein oder mehrere schon durchgelaufen sind, wird der neue Latch nie auf 0
+gesetzt.
+
+# Aufgabe 2
+ 
+## a
+
+Wenn alle Philosophen gleichzeitig die linke Gabel nehmen (sperren), 
+kann niemand mehr die rechte Gabel nehmen und essen. Das führt zu einem Deadlock. 
+ 
+## b
+ 
+Dadurch dass mit tryAcquire() immer alle Resourcen frei gibt, 
+wenn man nicht alle nötigen Resourcen beziehen kann,
+gibt es kein Deadlock oder Livelock. Jedoch ist diese Implementation
+nicht besonders effizient.
+  
+# Aufgabe 3
+ 
+## a
+ 
+Nur ein Write Lock kann zu jeder Zeit aktiv sein, zudem darf kein Read Lock aktiv sein.   
+Wenn mehrere Read Locks gleichzeitig upgraden wollen, könnte nur einer zu einem Write Lock werden.
+Ein upgradableReadLock stellt sicher, dass nur einer einen upgradableReadLock hat und somit auch 
+nur dieser den Write Lock beantragen kann.
